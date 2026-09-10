@@ -6,6 +6,24 @@
 <title>Shankar Envelope Makers — Custom paper packaging, boxes, envelopes & bags</title>
 <meta name="description" content="Custom cake boxes, rigid gift boxes, envelopes and kraft bags — die-cut, printed and foil-finished on recyclable kraft and board. Made to order in Maharashtra, India.">
 <meta name="theme-color" content="#f3f2f2">
+<meta name="author" content="Shankar Dhadke, Shankar Envelope Makers">
+<!-- Paper-coloured ground from the first paint, so landing doesn't flash white
+     while the app boots. -->
+<style>html,body{background:#f3f2f2;margin:0}</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "Shankar Envelope Makers",
+  "description": "Custom cake boxes, rigid gift boxes, envelopes and kraft bags, die-cut, printed and foil-finished to order.",
+  "founder": { "@type": "Person", "name": "Shankar Dhadke", "jobTitle": "Proprietor" },
+  "telephone": "+91-94226-47485",
+  "address": { "@type": "PostalAddress", "addressRegion": "Maharashtra", "addressCountry": "IN" },
+  "areaServed": "IN",
+  "openingHours": "Mo-Sa 10:00-19:00",
+  "knowsLanguage": ["en", "mr", "hi", "kn"]
+}
+</script>
 <script src="assets.js"></script>
 <script src="i18n.js"></script>
 <script src="support.js"></script>
@@ -47,11 +65,18 @@
       </nav>
 
       <div class="topbar-right">
-        <div class="langswitch" role="group" aria-label="{{ t.language }}">
-          <sc-for list="{{ langs }}" as="l" hint-placeholder-count="3">
-            <button type="button" class="lang-btn {{ l.cls }}" onClick="{{ l.onSelect }}" aria-pressed="{{ l.pressed }}" lang="{{ l.code }}">{{ l.label }}</button>
-          </sc-for>
-        </div>
+        <!-- Language picker: a native select, so phones get their own OS picker
+             and it scales past three languages without crowding the header. -->
+        <label class="langpick">
+          <svg class="langpick-globe" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <select class="langpick-select" value="{{ lang }}" onChange="{{ onLangSelect }}" aria-label="{{ t.language }}">
+            <option value="en" lang="en">English</option>
+            <option value="mr" lang="mr">मराठी</option>
+            <option value="hi" lang="hi">हिंदी</option>
+            <option value="kn" lang="kn">ಕನ್ನಡ</option>
+          </select>
+          <svg class="langpick-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </label>
         <a class="waplain iconbtn topbar-wa" href="{{ waHref }}" target="_blank" rel="noopener" aria-label="{{ t.contactWhatsApp }}">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22z"/><path d="M9.5 9.5c0 3 2 5 5 5"/></svg>
         </a>
@@ -83,183 +108,120 @@
               </div>
             </div>
 
-            <!-- The opening graphic. A closed, foil-sealed envelope holds still
-                 for a beat, then the seal lifts, the flap folds back and a
-                 letter slides out. It is built in layers so it can physically
-                 open: inside → letter → front pocket → flap → seal. Tap it to
-                 play the sequence again. -->
+            <!-- The opening graphic. Each part of the envelope is its own layer —
+                 inside, letter, front pocket, and a two-sided flap — so the
+                 opening is pure 3D movement (GPU-composited, no redrawing) and
+                 stays smooth on phones. The letter is a placeholder for the
+                 customer's own branding. Tap to play it again. -->
             <div class="hero-art {{ envClass }}" onPointerMove="{{ onHeroMove }}" onPointerLeave="{{ onHeroLeave }}">
               <button type="button" class="envelope-stage" onClick="{{ replayEnvelope }}" aria-label="{{ t.envReplay }}">
                 <span class="env-tilt">
-                <svg class="envelope-svg" viewBox="40 62 520 364" role="img" aria-hidden="true" focusable="false">
-                  <defs>
-                    <linearGradient id="envFlap" x1="0.3" y1="0" x2="0.7" y2="1">
-                      <stop offset="0" stop-color="#fefcf7"/>
-                      <stop offset="0.55" stop-color="#f2ebdd"/>
-                      <stop offset="1" stop-color="#dccfb7"/>
-                    </linearGradient>
-                    <linearGradient id="envFlapIn" x1="0.5" y1="0" x2="0.5" y2="1">
-                      <stop offset="0" stop-color="#d9cdb6"/>
-                      <stop offset="1" stop-color="#f3ede1"/>
-                    </linearGradient>
-                    <linearGradient id="envInside" x1="0.5" y1="0" x2="0.5" y2="1">
-                      <stop offset="0" stop-color="#cfc2a8"/>
-                      <stop offset="0.5" stop-color="#e0d6c3"/>
-                      <stop offset="1" stop-color="#e9e1d1"/>
-                    </linearGradient>
-                    <linearGradient id="envFoldL" x1="0" y1="0" x2="1" y2="0.35">
-                      <stop offset="0" stop-color="#ebe2d1"/>
-                      <stop offset="1" stop-color="#f8f3ea"/>
-                    </linearGradient>
-                    <linearGradient id="envFoldR" x1="1" y1="0" x2="0" y2="0.35">
-                      <stop offset="0" stop-color="#e7ddca"/>
-                      <stop offset="1" stop-color="#f6f0e5"/>
-                    </linearGradient>
-                    <linearGradient id="envFoldB" x1="0.5" y1="0" x2="0.5" y2="1">
-                      <stop offset="0" stop-color="#f7f2e8"/>
-                      <stop offset="1" stop-color="#e4d9c4"/>
-                    </linearGradient>
-                    <linearGradient id="letterPaper" x1="0.2" y1="0" x2="0.8" y2="1">
-                      <stop offset="0" stop-color="#fffefb"/>
-                      <stop offset="1" stop-color="#f4efe5"/>
-                    </linearGradient>
-                    <linearGradient id="foil" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0" stop-color="#ecd092"/>
-                      <stop offset="0.5" stop-color="#c3923f"/>
-                      <stop offset="1" stop-color="#8d6220"/>
-                    </linearGradient>
-                    <radialGradient id="envKey" cx="0.3" cy="0.14" r="0.85">
-                      <stop offset="0" stop-color="#ffffff" stop-opacity="0.7"/>
-                      <stop offset="0.55" stop-color="#ffffff" stop-opacity="0.1"/>
-                      <stop offset="1" stop-color="#7a6a4c" stop-opacity="0.2"/>
-                    </radialGradient>
-                    <radialGradient id="envGround" cx="0.5" cy="0.5" r="0.5">
-                      <stop offset="0" stop-color="#4a4034" stop-opacity="0.30"/>
-                      <stop offset="0.6" stop-color="#4a4034" stop-opacity="0.10"/>
-                      <stop offset="1" stop-color="#4a4034" stop-opacity="0"/>
-                    </radialGradient>
-                    <radialGradient id="sealFace" cx="0.34" cy="0.28" r="0.82">
-                      <stop offset="0" stop-color="#f0d49a"/>
-                      <stop offset="0.46" stop-color="#c99f4f"/>
-                      <stop offset="1" stop-color="#8f6320"/>
-                    </radialGradient>
-                    <linearGradient id="envSheenGrad" x1="0" y1="0" x2="1" y2="0">
-                      <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
-                      <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.5"/>
-                      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
-                    </linearGradient>
+                  <span class="env-scene" aria-hidden="true">
+                    <span class="env-ground"><span class="env-ground-soft"></span><span class="env-ground-core"></span></span>
+                    <span class="env-rig">
 
-                    <filter id="envGrain" x="-4%" y="-4%" width="108%" height="108%">
-                      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" seed="7" result="noise"/>
-                      <feColorMatrix in="noise" type="saturate" values="0" result="mono"/>
-                      <feComponentTransfer in="mono" result="grain">
-                        <feFuncA type="linear" slope="0.10" intercept="0"/>
-                      </feComponentTransfer>
-                      <feBlend in="SourceGraphic" in2="grain" mode="multiply" result="textured"/>
-                      <feComposite in="textured" in2="SourceGraphic" operator="in"/>
-                    </filter>
-                    <filter id="envSoft" x="-25%" y="-25%" width="150%" height="150%">
-                      <feGaussianBlur stdDeviation="9"/>
-                    </filter>
-                    <filter id="sealSoft" x="-40%" y="-40%" width="180%" height="180%">
-                      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#4a3517" flood-opacity="0.4"/>
-                    </filter>
-                    <filter id="letterLift" x="-10%" y="-10%" width="120%" height="125%">
-                      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#4a3a22" flood-opacity="0.18"/>
-                    </filter>
+                      <span class="env-layer env-inside">
+                        <svg viewBox="0 0 408 252" preserveAspectRatio="none" focusable="false">
+                          <defs>
+                            <linearGradient id="e-inside" x1="0.5" y1="0" x2="0.5" y2="1">
+                              <stop offset="0" stop-color="#cdbfa4"/><stop offset="0.5" stop-color="#dfd5c1"/><stop offset="1" stop-color="#e9e1d1"/>
+                            </linearGradient>
+                          </defs>
+                          <rect x="0" y="0" width="408" height="252" rx="7" fill="url(#e-inside)"/>
+                        </svg>
+                      </span>
 
-                    <clipPath id="envClip">
-                      <rect x="96" y="104" width="408" height="252" rx="7"/>
-                    </clipPath>
-                    <!-- The front pocket: the whole face except the top "V" the flap covers. -->
-                    <clipPath id="pocketClip">
-                      <path d="M96 104 L300 262 L504 104 L504 356 L96 356 Z"/>
-                    </clipPath>
-                  </defs>
+                      <span class="env-letter">
+                        <span class="env-letter-logo">{{ t.letterLogo }}</span>
+                        <span class="env-letter-brand">{{ t.letterBrand }}</span>
+                        <span class="env-letter-sub">{{ t.letterSub }}</span>
+                        <span class="env-letter-rule"></span>
+                        <span class="env-letter-lines"><i></i><i></i><i></i></span>
+                      </span>
 
-                  <!-- Ground shadow (shrinks with the envelope as the camera pulls back) -->
-                  <g class="env-ground">
-                    <ellipse cx="300" cy="384" rx="212" ry="30" fill="url(#envGround)"/>
-                    <ellipse cx="300" cy="371" rx="176" ry="15" fill="#4a4034" opacity="0.16" filter="url(#envSoft)"/>
-                  </g>
+                      <span class="env-layer env-pocket">
+                        <svg viewBox="0 0 408 252" preserveAspectRatio="none" focusable="false">
+                          <defs>
+                            <linearGradient id="e-foldL" x1="0" y1="0" x2="1" y2="0.35"><stop offset="0" stop-color="#ebe2d1"/><stop offset="1" stop-color="#f8f3ea"/></linearGradient>
+                            <linearGradient id="e-foldR" x1="1" y1="0" x2="0" y2="0.35"><stop offset="0" stop-color="#e7ddca"/><stop offset="1" stop-color="#f6f0e5"/></linearGradient>
+                            <linearGradient id="e-foldB" x1="0.5" y1="0" x2="0.5" y2="1"><stop offset="0" stop-color="#f7f2e8"/><stop offset="1" stop-color="#e4d9c4"/></linearGradient>
+                            <radialGradient id="e-key" cx="0.3" cy="0.14" r="0.85">
+                              <stop offset="0" stop-color="#ffffff" stop-opacity="0.7"/><stop offset="0.55" stop-color="#ffffff" stop-opacity="0.1"/><stop offset="1" stop-color="#7a6a4c" stop-opacity="0.2"/>
+                            </radialGradient>
+                            <filter id="e-grain" x="-3%" y="-3%" width="106%" height="106%">
+                              <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" seed="7" result="n"/>
+                              <feColorMatrix in="n" type="saturate" values="0" result="m"/>
+                              <feComponentTransfer in="m" result="g"><feFuncA type="linear" slope="0.10"/></feComponentTransfer>
+                              <feBlend in="SourceGraphic" in2="g" mode="multiply" result="t"/>
+                              <feComposite in="t" in2="SourceGraphic" operator="in"/>
+                            </filter>
+                            <clipPath id="e-body"><rect x="0" y="0" width="408" height="252" rx="7"/></clipPath>
+                            <clipPath id="e-pocketclip"><path d="M0 0 L204 158 L408 0 L408 252 L0 252 Z"/></clipPath>
+                          </defs>
+                          <g filter="url(#e-grain)">
+                            <g clip-path="url(#e-body)">
+                              <path d="M0 0 L204 158 L0 252 Z" fill="url(#e-foldL)"/>
+                              <path d="M408 0 L204 158 L408 252 Z" fill="url(#e-foldR)"/>
+                              <path d="M0 252 L204 146 L408 252 Z" fill="url(#e-foldB)"/>
+                              <path d="M0 252 L204 146 L408 252" fill="none" stroke="#c7b99b" stroke-opacity="0.55" stroke-width="1.1"/>
+                              <path d="M6 248 L204 152 L402 248" fill="none" stroke="#ffffff" stroke-opacity="0.55" stroke-width="1.2"/>
+                              <path d="M0 0 L204 158 L408 0" fill="none" stroke="#c7b99b" stroke-opacity="0.45" stroke-width="1"/>
+                            </g>
+                            <rect x="0" y="0" width="408" height="252" rx="7" fill="url(#e-key)" clip-path="url(#e-pocketclip)" style="mix-blend-mode:soft-light"/>
+                            <path d="M0 0 L204 158 L408 0 L408 245 A7 7 0 0 1 401 252 L7 252 A7 7 0 0 1 0 245 Z" fill="none" stroke="#bfb193" stroke-opacity="0.75" stroke-width="1.2"/>
+                          </g>
+                        </svg>
+                      </span>
 
-                  <g class="env-rig">
-                    <!-- Invisible frame that keeps the rig's pivot fixed while its
-                         children move (fill-box would otherwise drift). -->
-                    <rect x="80" y="-60" width="440" height="480" fill="none" stroke="none"/>
+                      <span class="env-flap">
+                        <span class="env-flap-face env-flap-front">
+                          <svg viewBox="0 0 408 157" preserveAspectRatio="none" focusable="false">
+                            <defs>
+                              <linearGradient id="e-flap" x1="0.3" y1="0" x2="0.7" y2="1">
+                                <stop offset="0" stop-color="#fefcf7"/><stop offset="0.55" stop-color="#f2ebdd"/><stop offset="1" stop-color="#dccfb7"/>
+                              </linearGradient>
+                            </defs>
+                            <g filter="url(#e-grain)">
+                              <path d="M0 7 A7 7 0 0 1 7 0 L401 0 A7 7 0 0 1 408 7 L212 154 A13 13 0 0 1 196 154 Z" fill="url(#e-flap)"/>
+                              <path d="M0 7 A7 7 0 0 1 7 0 L401 0 A7 7 0 0 1 408 7 L212 154 A13 13 0 0 1 196 154 Z" fill="url(#e-key)" style="mix-blend-mode:soft-light"/>
+                              <path d="M0 7 A7 7 0 0 1 7 0 L401 0 A7 7 0 0 1 408 7 L212 154 A13 13 0 0 1 196 154 Z" fill="none" stroke="#c3b596" stroke-opacity="0.6" stroke-width="1.1"/>
+                              <path d="M8 4 L204 151 L400 4" fill="none" stroke="#ffffff" stroke-opacity="0.5" stroke-width="1.6" stroke-linecap="round"/>
+                            </g>
+                          </svg>
+                          <span class="env-flap-shade"></span>
+                        </span>
+                        <span class="env-flap-face env-flap-inner">
+                          <svg viewBox="0 0 408 157" preserveAspectRatio="none" focusable="false">
+                            <defs>
+                              <linearGradient id="e-flapin" x1="0.5" y1="0" x2="0.5" y2="1">
+                                <stop offset="0" stop-color="#d5c8ae"/><stop offset="1" stop-color="#f3ede1"/>
+                              </linearGradient>
+                            </defs>
+                            <path d="M0 7 A7 7 0 0 1 7 0 L401 0 A7 7 0 0 1 408 7 L212 154 A13 13 0 0 1 196 154 Z" fill="url(#e-flapin)"/>
+                            <path d="M0 7 A7 7 0 0 1 7 0 L401 0 A7 7 0 0 1 408 7 L212 154 A13 13 0 0 1 196 154 Z" fill="none" stroke="#bfb193" stroke-opacity="0.55" stroke-width="1.1"/>
+                          </svg>
+                          <span class="env-flap-dim"></span>
+                        </span>
+                        <span class="env-seal">
+                          <svg viewBox="0 0 70 70" aria-hidden="true" focusable="false">
+                            <defs>
+                              <radialGradient id="e-seal" cx="0.34" cy="0.28" r="0.85">
+                                <stop offset="0" stop-color="#f0d49a"/><stop offset="0.46" stop-color="#c99f4f"/><stop offset="1" stop-color="#8a5e1c"/>
+                              </radialGradient>
+                            </defs>
+                            <path d="M69.17 35.00 L70.02 38.06 L68.91 40.98 L67.32 43.66 L66.44 46.44 L65.53 49.24 L63.64 51.54 L61.33 53.44 L59.45 55.52 L57.78 57.78 L55.81 59.80 L53.87 61.94 L52.20 64.79 L50.14 67.46 L47.10 68.24 L43.62 67.15 L40.49 66.14 L37.74 66.33 L35.00 66.95 L32.18 67.20 L29.27 67.50 L26.18 67.90 L23.19 67.44 L20.66 65.75 L18.28 63.95 L15.58 62.74 L13.06 61.15 L11.65 58.35 L10.98 55.15 L9.63 52.76 L7.22 51.04 L4.74 49.11 L2.79 46.72 L1.14 44.07 L0.19 41.14 L0.89 37.98 L2.77 35.00 L3.87 32.28 L3.52 29.45 L3.19 26.48 L4.05 23.73 L5.35 21.17 L6.14 18.34 L6.94 15.35 L8.59 12.84 L10.82 10.82 L13.13 8.93 L15.78 7.55 L19.00 7.29 L22.07 7.28 L24.39 5.85 L26.43 3.02 L28.96 0.74 L31.95 0.18 L35.00 0.55 L37.97 1.06 L40.80 2.10 L43.37 3.77 L45.90 5.04 L48.72 5.57 L51.48 6.45 L53.66 8.35 L55.74 10.29 L58.60 11.40 L61.85 12.47 L64.03 14.68 L64.73 17.84 L64.92 21.05 L65.19 24.01 L65.28 26.89 L65.58 29.61 L67.04 32.20 Z" fill="url(#e-seal)"/>
+                            <path d="M69.17 35.00 L70.02 38.06 L68.91 40.98 L67.32 43.66 L66.44 46.44 L65.53 49.24 L63.64 51.54 L61.33 53.44 L59.45 55.52 L57.78 57.78 L55.81 59.80 L53.87 61.94 L52.20 64.79 L50.14 67.46 L47.10 68.24 L43.62 67.15 L40.49 66.14 L37.74 66.33 L35.00 66.95 L32.18 67.20 L29.27 67.50 L26.18 67.90 L23.19 67.44 L20.66 65.75 L18.28 63.95 L15.58 62.74 L13.06 61.15 L11.65 58.35 L10.98 55.15 L9.63 52.76 L7.22 51.04 L4.74 49.11 L2.79 46.72 L1.14 44.07 L0.19 41.14 L0.89 37.98 L2.77 35.00 L3.87 32.28 L3.52 29.45 L3.19 26.48 L4.05 23.73 L5.35 21.17 L6.14 18.34 L6.94 15.35 L8.59 12.84 L10.82 10.82 L13.13 8.93 L15.78 7.55 L19.00 7.29 L22.07 7.28 L24.39 5.85 L26.43 3.02 L28.96 0.74 L31.95 0.18 L35.00 0.55 L37.97 1.06 L40.80 2.10 L43.37 3.77 L45.90 5.04 L48.72 5.57 L51.48 6.45 L53.66 8.35 L55.74 10.29 L58.60 11.40 L61.85 12.47 L64.03 14.68 L64.73 17.84 L64.92 21.05 L65.19 24.01 L65.28 26.89 L65.58 29.61 L67.04 32.20 Z" fill="none" stroke="#7d5411" stroke-opacity="0.45" stroke-width="1.1"/>
+                            <circle cx="35" cy="35" r="24.5" fill="none" stroke="#5a3b0a" stroke-opacity="0.35" stroke-width="1"/>
+                            <circle cx="35" cy="35" r="22" fill="none" stroke="#fff" stroke-opacity="0.18" stroke-width="0.8"/>
+                            <g transform="translate(35 35)" fill="#5a3b0a" fill-opacity="0.42"><ellipse cx="0" cy="-8.2" rx="3.3" ry="7.6" transform="rotate(0)"/><ellipse cx="0" cy="-8.2" rx="3.3" ry="7.6" transform="rotate(45)"/><ellipse cx="0" cy="-8.2" rx="3.3" ry="7.6" transform="rotate(90)"/><ellipse cx="0" cy="-8.2" rx="3.3" ry="7.6" transform="rotate(135)"/><ellipse cx="0" cy="-8.2" rx="3.3" ry="7.6" transform="rotate(180)"/><ellipse cx="0" cy="-8.2" rx="3.3" ry="7.6" transform="rotate(225)"/><ellipse cx="0" cy="-8.2" rx="3.3" ry="7.6" transform="rotate(270)"/><ellipse cx="0" cy="-8.2" rx="3.3" ry="7.6" transform="rotate(315)"/><circle r="3.4" fill-opacity="0.65"/></g>
+                            <path d="M14 22 a24 24 0 0 1 19 -10" fill="none" stroke="#fff" stroke-opacity="0.5" stroke-width="2.3" stroke-linecap="round"/>
+                          </svg>
+                        </span>
+                      </span>
 
-                    <!-- Open flap, folded back behind the envelope (hidden until it swings up) -->
-                    <g class="env-flap-open">
-                      <g transform="translate(0 208) scale(1 -1)">
-                        <path d="M96 111 A7 7 0 0 1 103 104 L497 104 A7 7 0 0 1 504 111 L308 258 A13 13 0 0 1 292 258 Z" fill="url(#envFlapIn)"/>
-                        <path d="M96 111 A7 7 0 0 1 103 104 L497 104 A7 7 0 0 1 504 111 L308 258 A13 13 0 0 1 292 258 Z"
-                              fill="none" stroke="#bfb193" stroke-opacity="0.55" stroke-width="1.1"/>
-                      </g>
-                    </g>
-
-                    <!-- Inside of the envelope -->
-                    <rect x="96" y="104" width="408" height="252" rx="7" fill="url(#envInside)"/>
-
-                    <!-- The letter -->
-                    <g class="env-letter">
-                      <g filter="url(#letterLift)">
-                        <rect x="118" y="120" width="364" height="222" rx="3" fill="url(#letterPaper)" stroke="#d8cdb6" stroke-width="1"/>
-                        <circle cx="300" cy="166" r="21" fill="none" stroke="url(#foil)" stroke-width="1.6"/>
-                        <text x="300" y="167" text-anchor="middle" dominant-baseline="central"
-                              font-family="Cormorant Garamond, Georgia, serif" font-size="25" fill="url(#foil)">S</text>
-                        <text x="300" y="212" text-anchor="middle"
-                              font-family="Cormorant Garamond, Georgia, serif" font-size="30" fill="#2d2b2b">Shankar</text>
-                        <text x="300" y="233" text-anchor="middle" letter-spacing="3.6"
-                              font-family="Lora, Georgia, serif" font-size="9" fill="#8a7a5c">ENVELOPE MAKERS</text>
-                        <path d="M264 250 L336 250" stroke="url(#foil)" stroke-width="1.3" stroke-linecap="round"/>
-                        <path d="M172 272 L428 272 M188 286 L412 286 M208 300 L392 300" stroke="#dcd3c1" stroke-width="3" stroke-linecap="round"/>
-                      </g>
-                    </g>
-
-                    <!-- Front pocket: the three folded panels -->
-                    <g class="env-pocket" filter="url(#envGrain)">
-                      <g clip-path="url(#envClip)">
-                        <path d="M96 104 L300 262 L96 356 Z" fill="url(#envFoldL)"/>
-                        <path d="M504 104 L300 262 L504 356 Z" fill="url(#envFoldR)"/>
-                        <path d="M96 356 L300 250 L504 356 Z" fill="url(#envFoldB)"/>
-                        <path d="M96 356 L300 250 L504 356" fill="none" stroke="#c7b99b" stroke-opacity="0.55" stroke-width="1.1"/>
-                        <path d="M102 352 L300 256 L498 352" fill="none" stroke="#ffffff" stroke-opacity="0.55" stroke-width="1.2"/>
-                        <path d="M96 104 L300 262 L504 104" fill="none" stroke="#c7b99b" stroke-opacity="0.45" stroke-width="1"/>
-                      </g>
-                      <rect x="96" y="104" width="408" height="252" rx="7" fill="url(#envKey)" clip-path="url(#pocketClip)" style="mix-blend-mode:soft-light"/>
-                      <path d="M96 104 L300 262 L504 104 L504 349 A7 7 0 0 1 497 356 L103 356 A7 7 0 0 1 96 349 Z"
-                            fill="none" stroke="#bfb193" stroke-opacity="0.75" stroke-width="1.2"/>
-                    </g>
-
-                    <!-- Closed flap (on top until it folds back) -->
-                    <g class="env-flap-closed">
-                      <g filter="url(#envGrain)">
-                        <path d="M96 111 A7 7 0 0 1 103 104 L497 104 A7 7 0 0 1 504 111 L308 258 A13 13 0 0 1 292 258 Z" fill="url(#envFlap)"/>
-                        <path d="M96 111 A7 7 0 0 1 103 104 L497 104 A7 7 0 0 1 504 111 L308 258 A13 13 0 0 1 292 258 Z" fill="url(#envKey)" style="mix-blend-mode:soft-light"/>
-                        <path d="M96 111 A7 7 0 0 1 103 104 L497 104 A7 7 0 0 1 504 111 L308 258 A13 13 0 0 1 292 258 Z"
-                              fill="none" stroke="#c3b596" stroke-opacity="0.6" stroke-width="1.1"/>
-                        <path d="M104 108 L300 255 L496 108" fill="none" stroke="#ffffff" stroke-opacity="0.5" stroke-width="1.6" stroke-linecap="round"/>
-                      </g>
-                      <!-- darkens as the flap turns away from the light -->
-                      <path class="env-flap-shade" d="M96 111 A7 7 0 0 1 103 104 L497 104 A7 7 0 0 1 504 111 L308 258 A13 13 0 0 1 292 258 Z" fill="#5b4a2c" opacity="0"/>
-                    </g>
-
-                    <!-- Travelling sheen -->
-                    <g clip-path="url(#envClip)">
-                      <rect class="env-sheen" x="0" y="60" width="110" height="340" fill="url(#envSheenGrad)"/>
-                    </g>
-
-                    <!-- Wax seal -->
-                    <g class="env-seal" filter="url(#sealSoft)">
-                      <circle cx="300" cy="256" r="35" fill="url(#sealFace)"/>
-                      <circle cx="300" cy="256" r="35" fill="none" stroke="#7d5411" stroke-opacity="0.55" stroke-width="1.4"/>
-                      <circle cx="300" cy="256" r="27" fill="none" stroke="#5a3b0a" stroke-opacity="0.35" stroke-width="1"/>
-                      <text x="300" y="256" text-anchor="middle" dominant-baseline="central"
-                            font-family="Cormorant Garamond, Georgia, serif" font-size="30" fill="#4b3208" fill-opacity="0.88">S</text>
-                      <path d="M276 236 a34 34 0 0 1 26 -10" fill="none" stroke="#ffffff" stroke-opacity="0.45" stroke-width="2.4" stroke-linecap="round"/>
-                    </g>
-                  </g>
-                </svg>
+                      <span class="env-sheen-clip"><span class="env-sheen"></span></span>
+                    </span>
+                  </span>
                 </span>
               </button>
               <div class="hero-caption">{{ t.heroCaption }}</div>
@@ -940,6 +902,7 @@ const ICONS = {
   phone: '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13.83 19a11.5 11.5 0 0 1-5.06-2.95A11.5 11.5 0 0 1 5.82 11l1.36-1.36a2 2 0 0 0 .5-2L6.6 4.11A2 2 0 0 0 4.6 3H4a2 2 0 0 0-2 2 16 16 0 0 0 15 15 2 2 0 0 0 2-2v-.6a2 2 0 0 0-1.11-1.79l-3.53-1.08a2 2 0 0 0-2 .5Z"/></svg>',
   wa: '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22z"/><path d="M9.5 9.5c0 3 2 5 5 5"/></svg>',
   pin: '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 4.4-8 12-8 12s-8-7.6-8-12a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>',
+  user: '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>',
   clock: '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>',
   tabHome: '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .7-1.5l7-6a2 2 0 0 1 2.6 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>',
   tabBox: '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M11 21.7a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.7l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.7z"/><path d="M3.3 7 12 12l8.7-5"/><path d="M12 22V12"/></svg>',
@@ -964,6 +927,7 @@ function pickLang() {
   const nav = (navigator.language || 'en').toLowerCase();
   if (nav.indexOf('mr') === 0) return 'mr';
   if (nav.indexOf('hi') === 0) return 'hi';
+  if (nav.indexOf('kn') === 0) return 'kn';
   return 'en';
 }
 
@@ -1050,6 +1014,7 @@ class Component extends DCLogic {
      scrolls the window rather than an inner pane, and elements arrive as the
      screen switches. */
   setupReveal() {
+    this.watchHeroLive();
     if (!('IntersectionObserver' in window)) {
       document.querySelectorAll('[data-reveal], .section--ruled').forEach(function (el) { el.classList.add('sk-in'); });
       return;
@@ -1065,6 +1030,29 @@ class Component extends DCLogic {
     requestAnimationFrame(function () {
       document.querySelectorAll('[data-reveal]:not(.sk-in), .section--ruled:not(.sk-in)').forEach(function (el) { io.observe(el); });
     });
+  }
+
+  /* The opening sequence is held on its first frame (CSS: .hero:not(.is-live))
+     until the hero is on screen in a visible tab, so it genuinely starts when
+     the visitor lands — not in a background tab they haven't looked at yet. */
+  watchHeroLive() {
+    const hero = document.querySelector('.hero:not(.is-live)');
+    if (!hero || hero.__liveWatch) return;
+    hero.__liveWatch = true;
+    const go = function () { hero.classList.add('is-live'); };
+    if (!('IntersectionObserver' in window)) { go(); return; }
+    let seen = false;
+    const tryStart = function () {
+      if (seen && document.visibilityState === 'visible') {
+        go(); io.disconnect(); document.removeEventListener('visibilitychange', tryStart);
+      }
+    };
+    const io = new IntersectionObserver(function (entries) {
+      seen = entries.some(function (en) { return en.isIntersecting; });
+      tryStart();
+    }, { threshold: 0.15 });
+    document.addEventListener('visibilitychange', tryStart);
+    io.observe(hero);
   }
 
   paintIcons() {
@@ -1306,23 +1294,18 @@ class Component extends DCLogic {
     const activeTab = isDetail ? s.from : screen;
 
     // Header
-    const langs = (I18N.order || ['en']).map(function (code) {
-      return {
-        code: code, label: (I18N[code] || {}).label || code,
-        cls: self.activeCls(code === s.lang), pressed: code === s.lang ? 'true' : 'false',
-        onSelect: function () { self.setLang(code); },
-      };
-    });
 
     const navLinks = [
       { label: T.navHome, on: activeTab === 'home' && !isDetail, act: function () { self.go('home'); } },
       { label: T.navCatalog, on: activeTab === 'catalog', act: function () { self.go('catalog'); } },
       { label: T.navCraft, on: activeTab === 'craft', act: function () { self.go('craft'); } },
-      { label: T.navProcess, on: false, act: function () { self.goAnchor('process'); } },
-      { label: T.navFaq, on: false, act: function () { self.goAnchor('faq'); } },
+      { label: T.navProcess, on: false, extra: true, act: function () { self.goAnchor('process'); } },
+      { label: T.navFaq, on: false, extra: true, act: function () { self.goAnchor('faq'); } },
       { label: T.navSaved, on: activeTab === 'saved', act: function () { self.go('saved'); } },
-      { label: T.navContact, on: false, act: function () { self.goAnchor('contact'); } },
-    ].map(function (n) { return { label: n.label, cls: self.activeCls(n.on), onSelect: n.act }; });
+      { label: T.navContact, on: false, extra: true, act: function () { self.goAnchor('contact'); } },
+    ].map(function (n) {
+      return { label: n.label, cls: self.activeCls(n.on) + (n.extra ? ' navlink--extra' : ''), onSelect: n.act };
+    });
 
     const savedList = PRODUCTS.filter(function (p) { return s.saved.indexOf(p.id) >= 0; }).map(function (p) { return self.decorate(p); });
 
@@ -1363,6 +1346,7 @@ class Component extends DCLogic {
       };
     });
     const contacts = [
+      { icon: 'user', label: T.contactOwner, value: T.ownerName, href: '#contact', target: '_self' },
       { icon: 'wa', label: T.contactWhatsApp, value: PHONE_DISPLAY, href: this.waHref(T.waGeneral), target: '_blank' },
       { icon: 'phone', label: T.contactCall, value: PHONE_DISPLAY, href: 'tel:+' + WA_NUM, target: '_self' },
       { icon: 'clock', label: T.contactHours, value: T.contactHoursValue, href: '#contact', target: '_self' },
@@ -1459,7 +1443,9 @@ class Component extends DCLogic {
 
     return {
       t: t,
-      langs: langs, navLinks: navLinks, tabs: tabs,
+      lang: s.lang,
+      onLangSelect: function (e) { self.setLang(e.target.value); },
+      navLinks: navLinks, tabs: tabs,
 
       isHome: screen === 'home', isCatalog: screen === 'catalog', isDetail: isDetail,
       isCraft: screen === 'craft', isSaved: screen === 'saved',

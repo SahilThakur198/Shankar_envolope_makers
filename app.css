@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@400;600&family=Noto+Serif+Kannada:wght@400;600&display=swap');
 
 /* ============================================================================
    Shankar Envelope Makers — site stylesheet.
@@ -23,8 +23,8 @@
    ------------------------------------------------------------------------- */
 
 :root {
-  --font-heading: "Cormorant Garamond", "Noto Serif Devanagari", Georgia, serif;
-  --font-body: "Lora", "Noto Serif Devanagari", Georgia, serif;
+  --font-heading: "Cormorant Garamond", "Noto Serif Devanagari", "Noto Serif Kannada", Georgia, serif;
+  --font-body: "Lora", "Noto Serif Devanagari", "Noto Serif Kannada", Georgia, serif;
 }
 
 /* ── Page frame ───────────────────────────────────────────────────────────── */
@@ -144,7 +144,27 @@ button, input, textarea { font-family: inherit; font-size: inherit; color: inher
   height: 1.5px; background: var(--color-accent);
 }
 
-/* ── Language switcher ────────────────────────────────────────────────────── */
+/* ── Language picker ──────────────────────────────────────────────────────── */
+
+.langpick {
+  position: relative; display: inline-flex; align-items: center;
+  height: 38px; border: 1px solid var(--color-divider); border-radius: 9999px;
+  background: color-mix(in srgb, var(--color-surface) 70%, transparent);
+  color: var(--color-accent-800); transition: border-color .18s, background .18s;
+}
+.langpick:hover, .langpick:focus-within { border-color: var(--color-accent); background: var(--color-accent-100); }
+.langpick-globe { position: absolute; left: 11px; pointer-events: none; }
+.langpick-caret { position: absolute; right: 11px; pointer-events: none; opacity: .75; }
+.langpick-select {
+  appearance: none; -webkit-appearance: none;
+  height: 100%; border: 0; background: transparent; cursor: pointer;
+  padding: 0 30px 0 32px; font-family: var(--font-body); font-size: 13px;
+  color: inherit; border-radius: 9999px;
+}
+.langpick-select:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+.langpick-select option { color: var(--color-text); background: var(--color-bg); }
+
+/* (legacy segmented control, kept for reference; no longer rendered) */
 
 .langswitch {
   display: inline-flex; align-items: center;
@@ -284,22 +304,23 @@ section[id] { scroll-margin-top: 62px; }      /* land below the sticky header */
 .hero-caption { font-size: 11.5px; color: var(--color-neutral-600); margin-top: 14px; text-align: center; }
 
 /* ── The opening envelope ─────────────────────────────────────────────────
-   Drawn, not photographed, so it stays crisp at every size and is there the
-   moment the page is. It then plays a short sequence:
+   Built from separate layers (inside, letter, front pocket, two-sided flap,
+   seal) that only ever move — transform and opacity — so the browser hands
+   them to the GPU and nothing is redrawn mid-animation. The flap is a real
+   3D hinge: it lifts toward the viewer, swings over the top and comes to
+   rest leaning back behind the envelope.
 
-     0.00–1.10s  envelope rises into place
-     0.55–1.25s  wax seal presses on
-     1.25–2.20s  hold: the still "opening visual"
-     1.15–2.25s  one sweep of light across the paper
-     2.20–2.65s  seal lifts away
-     2.30–3.30s  the camera eases back, making room for what comes next
-     2.50–2.90s  flap folds up, foreshortening to an edge…
-     2.90–3.35s  …and swings back behind the envelope
-     3.25–4.50s  a letter slides out, then floats
-     5.00s →     the light sweep repeats every 6s
-
-   .is-playing runs it. .is-open is the same end state with no motion, used
-   when a visitor comes back to the home screen. Tapping replays it.
+   One continuous ~3.3s sequence, every phase overlapping the next:
+     0.00–0.90s  envelope rises into place
+     0.25–0.85s  wax seal presses on
+     0.70–1.70s  light sweeps across the paper
+     1.32–1.74s  seal lifts away…
+     1.42–2.42s  …as the flap swings open
+     1.20–2.15s  the camera eases back to make room
+     2.10–3.30s  the letter slides out, then floats
+   It starts the moment the hero is actually on screen (see .is-live), so a
+   page opened in a background tab still plays when the visitor arrives.
+   .is-open is the resting end state, used on return visits to Home.
    ------------------------------------------------------------------------- */
 .envelope-stage {
   position: relative;
@@ -309,8 +330,7 @@ section[id] { scroll-margin-top: 62px; }      /* land below the sticky header */
   isolation: isolate;
   -webkit-tap-highlight-color: transparent;
 }
-/* A soft pool of light behind the envelope, the "studio" it sits in. It
-   drifts toward the cursor on desktop (--glint is set from JS). */
+/* A soft pool of light behind the envelope that drifts toward the cursor. */
 .envelope-stage::before {
   content: ''; position: absolute; z-index: -1;
   inset: -6% -4% 4%;
@@ -322,54 +342,164 @@ section[id] { scroll-margin-top: 62px; }      /* land below the sticky header */
   transform: perspective(1100px) rotateX(var(--tilt-y, 0deg)) rotateY(var(--tilt-x, 0deg));
   transition: transform .7s cubic-bezier(.2, .7, .2, 1);
 }
-.envelope-svg { width: 100%; height: auto; display: block; overflow: visible; }
 
-/* Pivots. Every moving layer turns about a fixed, meaningful point. */
-.env-rig          { transform-box: fill-box; transform-origin: 50% 100%; }
-.env-ground       { transform-box: fill-box; transform-origin: 50% 50%; }
-.env-flap-closed  { transform-box: fill-box; transform-origin: 50% 0%; }   /* hinge */
-.env-flap-open    { transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(0); }
-.env-seal         { transform-box: fill-box; transform-origin: 50% 50%; }
+/* The stage is 520 × 364 "units"; every layer is placed in those units as
+   percentages, and type is sized in container units so it scales with it. */
+.env-scene {
+  position: relative; display: block; width: 100%;
+  aspect-ratio: 520 / 364;
+  perspective: 1400px; perspective-origin: 50% 28%;
+  container-type: inline-size;
+}
+.env-ground { position: absolute; inset: 0; display: block; transform-origin: 50% 88%; }
+.env-ground-soft, .env-ground-core { position: absolute; display: block; border-radius: 50%; }
+.env-ground-soft {
+  left: 9.23%; top: 80.2%; width: 81.54%; height: 16.48%;
+  background: radial-gradient(closest-side, rgba(74, 64, 52, .30), rgba(74, 64, 52, .10) 60%, rgba(74, 64, 52, 0));
+}
+.env-ground-core {
+  left: 16.15%; top: 80.8%; width: 67.7%; height: 8.24%;
+  background: radial-gradient(closest-side, rgba(74, 64, 52, .22), rgba(74, 64, 52, 0));
+}
 
-.env-sheen { transform: translateX(-190px) skewX(-18deg); animation: envSheen 6s ease-in-out 5s infinite; }
-.is-playing .env-sheen { animation: envSheenOnce 1.1s ease-in-out 1.15s both, envSheen 6s ease-in-out 5s infinite; }
+.env-rig {
+  position: absolute; display: block;
+  left: 10.769%; top: 11.538%; width: 78.462%; height: 69.231%;
+  transform-style: preserve-3d;
+  transform-origin: 50% 130%;            /* a point just below the envelope */
+  will-change: transform;
+}
+.env-layer { position: absolute; inset: 0; display: block; }
+.env-layer > svg, .env-flap-face > svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.env-inside { transform: translateZ(0); }
+.env-pocket { transform: translateZ(3px); }
 
-.is-playing .envelope-svg    { animation: envRise 1.1s cubic-bezier(.2, .75, .25, 1) both; }
-.is-playing .env-seal        { animation: sealOn .7s cubic-bezier(.2, .8, .2, 1) .55s both,
-                                          sealOff .45s cubic-bezier(.5, 0, .75, 0) 2.2s forwards; }
-.is-playing .env-flap-closed { animation: flapFold .4s cubic-bezier(.55, 0, .85, .35) 2.5s forwards; }
-.is-playing .env-flap-shade  { animation: flapShade .4s cubic-bezier(.55, 0, .85, .35) 2.5s forwards; }
-.is-playing .env-flap-open   { animation: flapBack .45s cubic-bezier(.15, .65, .3, 1) 2.9s both; }
-.is-playing .env-rig         { animation: rigPull 1s cubic-bezier(.45, 0, .2, 1) 2.3s both; }
-.is-playing .env-ground      { animation: groundPull 1s cubic-bezier(.45, 0, .2, 1) 2.3s both; }
-.is-playing .env-letter      { animation: letterOut 1.25s cubic-bezier(.22, .8, .26, 1) 3.25s both,
-                                          letterFloat 6s ease-in-out 4.6s infinite; }
-.is-playing .hero-caption    { animation: heroIn .8s cubic-bezier(.2, .75, .25, 1) 4.1s backwards; }
+/* The letter: a placeholder for the customer's own stationery. */
+.env-letter {
+  position: absolute; display: flex; flex-direction: column; align-items: center;
+  left: 5.392%; top: 6.349%; width: 89.216%; height: 88.095%;
+  padding-top: 7%; box-sizing: border-box; overflow: hidden;
+  background: linear-gradient(160deg, #fffefb, #f4efe5);
+  border: 1px solid #d8cdb6; border-radius: 3px;
+  box-shadow: 0 3px 8px rgba(74, 58, 34, .16);
+  color: #2d2b2b; text-align: center; line-height: 1.15;
+  transform: translateZ(2px);
+  will-change: transform;
+}
+.env-letter-logo {
+  display: inline-block; font-family: var(--font-body);
+  font-size: 9px; font-size: 1.75cqi;
+  letter-spacing: .16em; text-transform: uppercase; color: #9a7630;
+  border: 1px dashed #c3923f; border-radius: 9999px;
+  padding: .5em 1.3em;
+}
+.env-letter-brand {
+  display: block; max-width: 92%;
+  font-family: var(--font-heading); font-weight: 600;
+  font-size: 24px; font-size: 5cqi;
+  margin-top: .5em; letter-spacing: -.01em;
+}
+.env-letter-sub {
+  display: block; font-family: var(--font-body);
+  font-size: 9px; font-size: 1.8cqi;
+  letter-spacing: .12em; color: #8a7a5c; margin-top: .45em;
+}
+.env-letter-rule {
+  display: block; width: 27%; height: 1px; margin-top: 2.1cqi;
+  background: linear-gradient(90deg, transparent, #c3923f, transparent);
+}
+.env-letter-lines { display: flex; flex-direction: column; align-items: center; gap: 1.9cqi; width: 100%; margin-top: 2.2cqi; }
+.env-letter-lines i { display: block; height: .55cqi; min-height: 2px; border-radius: 9px; background: #e0d7c5; }
+.env-letter-lines i:nth-child(1) { width: 70%; }
+.env-letter-lines i:nth-child(2) { width: 61%; }
+.env-letter-lines i:nth-child(3) { width: 50%; }
+:is(:lang(mr), :lang(hi), :lang(kn)) .env-letter-logo,
+:is(:lang(mr), :lang(hi), :lang(kn)) .env-letter-sub { letter-spacing: .02em; text-transform: none; font-size: 2.1cqi; }
+:is(:lang(mr), :lang(hi), :lang(kn)) .env-letter-brand { font-size: 4.3cqi; line-height: 1.3; }
 
-.is-open .env-seal        { opacity: 0; }
-.is-open .env-flap-closed { transform: scaleY(0); }
-.is-open .env-flap-open   { transform: scaleY(.8); }
-.is-open .env-rig         { transform: scale(.8); }
-.is-open .env-ground      { transform: scaleX(.8); }
-.is-open .env-letter      { transform: translateY(-112px); animation: letterFloat 6s ease-in-out infinite; }
+/* The flap: hinged on its top edge, two faces back to back. */
+.env-flap {
+  position: absolute; display: block; left: 0; top: 0; width: 100%; height: 62.3%;
+  transform-origin: 50% 0;
+  transform-style: preserve-3d;
+  transform: translateZ(4px) rotateX(0deg);
+  will-change: transform;
+}
+.env-flap-face { position: absolute; inset: 0; display: block; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
+.env-flap-inner { transform: rotateY(180deg); }
+.env-flap-shade, .env-flap-dim {
+  position: absolute; inset: 0; display: block; pointer-events: none; opacity: 0;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+.env-flap-shade { background: #5b4a2c; }
+.env-flap-dim   { background: #3e3222; }
+.env-seal {
+  position: absolute; display: block;
+  left: 41.42%; top: 74.5%; width: 17.16%; aspect-ratio: 1;
+  transform: translateZ(1px);
+  -webkit-backface-visibility: hidden; backface-visibility: hidden;
+  filter: drop-shadow(0 3px 4px rgba(74, 53, 23, .4));
+  will-change: transform, opacity;
+}
+.env-seal > svg { display: block; width: 100%; height: 100%; }
 
-@keyframes envRise     { from { opacity: 0; transform: translateY(22px) scale(.965); } to { opacity: 1; transform: none; } }
-@keyframes sealOn      { from { opacity: 0; transform: scale(.55) rotate(-18deg); } to { opacity: 1; transform: none; } }
-@keyframes sealOff     { to { opacity: 0; transform: translateY(-16px) scale(1.1) rotate(8deg); } }
-@keyframes flapFold    { to { transform: scaleY(0); } }
-@keyframes flapShade   { to { opacity: .3; } }
-@keyframes flapBack    { from { transform: scaleY(0); } to { transform: scaleY(.8); } }
-@keyframes rigPull     { from { transform: none; } to { transform: scale(.8); } }
-@keyframes groundPull  { from { transform: none; } to { transform: scaleX(.8); } }
-@keyframes letterOut   { from { transform: translateY(0); } to { transform: translateY(-112px); } }
-@keyframes letterFloat { 0%, 100% { transform: translateY(-112px); } 50% { transform: translateY(-118px); } }
+.env-sheen-clip {
+  position: absolute; inset: 0; display: block; overflow: hidden;
+  border-radius: 1.7% / 2.8%; pointer-events: none;
+  transform: translateZ(6px);
+}
+.env-sheen {
+  position: absolute; top: -20%; left: 0; display: block; width: 27%; height: 140%;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, .5), rgba(255, 255, 255, 0));
+  transform: translateX(-160%) skewX(-18deg);
+  animation: envSheen 6s ease-in-out 4.6s infinite;
+}
+
+/* ── The sequence ── */
+.is-playing .env-scene      { animation: envRise .9s cubic-bezier(.2, .75, .25, 1) both; }
+.is-playing .env-seal       { animation: sealOn .6s cubic-bezier(.2, .8, .2, 1) .25s both,
+                                          sealOff .42s cubic-bezier(.5, 0, .75, 0) 1.32s forwards; }
+.is-playing .env-sheen      { animation: envSheenOnce 1s ease-in-out .7s both, envSheen 6s ease-in-out 4.6s infinite; }
+.is-playing .env-flap       { animation: flapOpen 1s cubic-bezier(.55, .06, .32, 1) 1.42s both; }
+.is-playing .env-flap-shade { animation: flapShade 1s linear 1.42s both; }
+.is-playing .env-flap-dim   { animation: flapDim 1s linear 1.42s both; }
+.is-playing .env-rig        { animation: rigPull .95s cubic-bezier(.3, 0, .2, 1) 1.2s both; }
+.is-playing .env-ground     { animation: groundPull .95s cubic-bezier(.3, 0, .2, 1) 1.2s both; }
+.is-playing .env-letter     { animation: letterOut 1.2s cubic-bezier(.22, .8, .26, 1) 2.1s both,
+                                          letterFloat 6s ease-in-out 3.35s infinite; }
+.is-playing .hero-caption   { animation: heroIn .8s cubic-bezier(.2, .75, .25, 1) 2.9s backwards; }
+
+/* Resting, already-open state (no motion). */
+.is-open .env-seal      { opacity: 0; }
+.is-open .env-flap      { transform: translateZ(-3px) rotateX(205deg); }
+.is-open .env-rig       { transform: scale(.75); }
+.is-open .env-ground    { transform: scaleX(.77); }
+.is-open .env-letter    { transform: translateZ(2px) translateY(-50.45%); animation: letterFloat 6s ease-in-out infinite; }
+
+/* Hold everything on its first frame until the hero is really on screen. */
+.hero:not(.is-live) :is(.hero-in, .hero-caption, .env-scene, .env-seal, .env-sheen, .env-flap,
+  .env-flap-shade, .env-flap-dim, .env-rig, .env-ground, .env-letter) { animation-play-state: paused; }
+
+@keyframes envRise    { from { opacity: 0; transform: translateY(22px) scale(.965); } to { opacity: 1; transform: none; } }
+@keyframes sealOn     { from { opacity: 0; transform: translateZ(1px) scale(.55) rotate(-18deg); } to { opacity: 1; transform: translateZ(1px) scale(1) rotate(0deg); } }
+@keyframes sealOff    { to { opacity: 0; transform: translateZ(10px) translateY(-16%) scale(1.14) rotate(8deg); } }
+@keyframes flapOpen   { from { transform: translateZ(4px) rotateX(0deg); } to { transform: translateZ(-3px) rotateX(205deg); } }
+@keyframes flapShade  { 0% { opacity: 0; } 50% { opacity: .34; } 100% { opacity: .34; } }
+@keyframes flapDim    { 0%, 45% { opacity: .28; } 100% { opacity: 0; } }
+@keyframes rigPull    { from { transform: none; } to { transform: scale(.75); } }
+@keyframes groundPull { from { transform: none; } to { transform: scaleX(.77); } }
+@keyframes letterOut  { from { transform: translateZ(2px) translateY(0); } to { transform: translateZ(2px) translateY(-50.45%); } }
+@keyframes letterFloat {
+  0%, 100% { transform: translateZ(2px) translateY(-50.45%); }
+  50%      { transform: translateZ(2px) translateY(-53.2%); }
+}
 @keyframes envSheen {
-  0%        { transform: translateX(-190px) skewX(-18deg); }
-  55%, 100% { transform: translateX(640px) skewX(-18deg); }
+  0%        { transform: translateX(-160%) skewX(-18deg); }
+  55%, 100% { transform: translateX(470%) skewX(-18deg); }
 }
 @keyframes envSheenOnce {
-  from { transform: translateX(-190px) skewX(-18deg); }
-  to   { transform: translateX(640px) skewX(-18deg); }
+  from { transform: translateX(-160%) skewX(-18deg); }
+  to   { transform: translateX(470%) skewX(-18deg); }
 }
 
 /* Hero copy arrives in a short stagger; the headline is unmasked top-down,
@@ -749,15 +879,21 @@ section[id] { scroll-margin-top: 62px; }      /* land below the sticky header */
    Devanagari conjuncts and vowel signs apart. Marathi and Hindi get normal
    spacing and a size bump so 8–9px labels stay legible.
    ------------------------------------------------------------------------- */
-:is(:lang(mr), :lang(hi)) :is(.eyebrow, .brand-sub, .stat-label, .card-kicker, .filter-label,
+:is(:lang(mr), :lang(hi), :lang(kn)) :is(.eyebrow, .brand-sub, .stat-label, .card-kicker, .filter-label,
   .spectable th, .summary dt, .contact-label, .optcard-sub, .tag) {
   letter-spacing: 0.01em;
   text-transform: none;
 }
-:is(:lang(mr), :lang(hi)) :is(.eyebrow, .filter-label, .spectable th, .summary dt) { font-size: 11.5px; }
-:is(:lang(mr), :lang(hi)) :is(.stat-label, .card-kicker, .contact-label) { font-size: 10.5px; }
-:is(:lang(mr), :lang(hi)) .brand-sub { font-size: 10px; }
-:is(:lang(mr), :lang(hi)) .tab-label { font-size: 10.5px; }
+:is(:lang(mr), :lang(hi), :lang(kn)) :is(.eyebrow, .filter-label, .spectable th, .summary dt) { font-size: 11.5px; }
+:is(:lang(mr), :lang(hi), :lang(kn)) :is(.stat-label, .card-kicker, .contact-label) { font-size: 10.5px; }
+:is(:lang(mr), :lang(hi), :lang(kn)) .brand-sub { font-size: 10px; }
+:is(:lang(mr), :lang(hi), :lang(kn)) .tab-label { font-size: 10.5px; }
+
+/* Kannada letters stack vowel signs above and below the line; the Latin
+   line-heights would clip them. */
+:lang(kn) :is(.hero-title, .page-title, .section-title, .card-name, .step-title, .faq-q, .stat-value) { line-height: 1.3; }
+:lang(kn) .hero-title { font-size: clamp(32px, 7.4vw, 50px); }
+:is(:lang(mr), :lang(hi)) .hero-title { line-height: 1.18; }
 
 /* ── Motion ───────────────────────────────────────────────────────────────── */
 
@@ -838,6 +974,7 @@ section[id] { scroll-margin-top: 62px; }      /* land below the sticky header */
   }
   .sk-on [data-reveal]:not(.sk-in) { opacity: 1; }
   .env-tilt { transform: none; }
+  .hero:not(.is-live) * { animation-play-state: running !important; }
   @supports (animation-timeline: scroll()) {
     .topbar::after { animation-duration: auto !important; }
   }
@@ -853,6 +990,10 @@ section[id] { scroll-margin-top: 62px; }      /* land below the sticky header */
   .brand-name { font-size: 18px; }
   .brand-sub { letter-spacing: 0.12em; font-size: 8.5px; }
   .lang-btn { padding: 7px 8px; font-size: 11.5px; }
+  .langpick { height: 34px; }
+  .langpick-select { padding: 0 24px 0 28px; font-size: 12.5px; }
+  .langpick-globe { left: 9px; }
+  .langpick-caret { right: 8px; }
 }
 
 /* Phones: each filter group is one swipeable row instead of three wrapped
@@ -894,6 +1035,7 @@ section[id] { scroll-margin-top: 62px; }      /* land below the sticky header */
 
 @media (min-width: 900px) {
   .sitenav { display: flex; }
+  .navlink--extra { display: none; }          /* How to order · FAQ · Contact */
   .tabbar { display: none; }
   .main { padding-bottom: 0; }
   .fab { bottom: 28px; }
@@ -932,7 +1074,7 @@ section[id] { scroll-margin-top: 62px; }      /* land below the sticky header */
   .sk-on .sk-in .step::before { transform: scaleX(1); }
 
   .speccards { grid-template-columns: repeat(4, 1fr); }
-  .contactlist { grid-template-columns: repeat(4, 1fr); }
+  .contactlist { grid-template-columns: repeat(5, 1fr); column-gap: 24px; }
 
   .bandrow { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 52px; }
 
@@ -949,6 +1091,10 @@ section[id] { scroll-margin-top: 62px; }      /* land below the sticky header */
 
   .savedrow-media { width: 96px; }
   .savedrow-actions { flex-direction: row; }
+}
+
+@media (min-width: 1200px) {
+  .navlink--extra { display: inline-block; }
 }
 
 @media (min-width: 1180px) {
