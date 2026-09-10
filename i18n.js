@@ -36,6 +36,7 @@ window.SEM_I18N = (function () {
       heroBrowse: 'Browse products',
       heroWhatsApp: 'WhatsApp us',
       heroCaption: 'Every order starts as a flat sheet, scored and folded to your dimensions.',
+      envReplay: 'Open the envelope again',
       sealTop: 'Freshly',
       sealBottom: 'crafted',
 
@@ -189,6 +190,7 @@ window.SEM_I18N = (function () {
     finishes: ['Gold foil stamp', 'Spot-UV gloss', 'Matte lamination', 'Plain deboss', 'No finish'],
     handles: ['Not applicable', 'Twisted paper handle', 'Flat paper handle', 'Cotton tape handle', 'Die-cut hand hole', 'Magnetic flap', 'Peel-and-seal flap'],
     prints: ['Single-colour logo', 'Two-colour offset', 'Full-colour CMYK', 'Foil only, no print', 'Unprinted / plain'],
+    ticker: ['Die-cutting', 'Foil stamping', 'Spot-UV', 'Offset printing', 'Flexo printing', 'Embossing & debossing', 'Matte lamination', 'Window patching', 'Rigid box making', 'Food-grade board'],
     specs: [
       { kicker: 'Paper grades', title: 'Stock & board', items: ['70–450 GSM kraft', 'Bleached kraft', 'SBS board', 'Corrugated E-flute', 'Rigid greyboard 1200 GSM'] },
       { kicker: 'Printing', title: 'Print & finishing', items: ['Multi-colour flexo', 'HD offset', 'Foil stamping', 'Spot-UV & matte lamination', 'Precision die-cutting'] },
@@ -240,6 +242,7 @@ window.SEM_I18N = (function () {
       heroBrowse: 'उत्पादने पहा',
       heroWhatsApp: 'व्हॉट्सॲपवर बोला',
       heroCaption: 'प्रत्येक ऑर्डर सपाट कागदापासून सुरू होते — तुमच्या मापाने घडी घालून तयार.',
+      envReplay: 'लिफाफा पुन्हा उघडा',
       sealTop: 'ताजे',
       sealBottom: 'घडवलेले',
 
@@ -393,6 +396,7 @@ window.SEM_I18N = (function () {
     finishes: ['गोल्ड फॉइल स्टँप', 'स्पॉट-यूव्ही ग्लॉस', 'मॅट लॅमिनेशन', 'साधे डिबॉस', 'फिनिश नको'],
     handles: ['लागू नाही', 'पिळलेली कागदी हँडल', 'सपाट कागदी हँडल', 'कॉटन टेप हँडल', 'डाय-कट हात-भोक', 'मॅग्नेटिक झाकण', 'पील-अँड-सील फ्लॅप'],
     prints: ['एकरंगी लोगो', 'दुरंगी ऑफसेट', 'पूर्ण रंगीत सीएमवायके', 'फक्त फॉइल, छपाई नाही', 'छपाईविरहित / साधे'],
+    ticker: ['डाय-कटिंग', 'फॉइल स्टँपिंग', 'स्पॉट-यूव्ही', 'ऑफसेट छपाई', 'फ्लेक्सो छपाई', 'एम्बॉसिंग व डिबॉसिंग', 'मॅट लॅमिनेशन', 'विंडो पॅचिंग', 'रिजिड बॉक्स निर्मिती', 'फूड-ग्रेड बोर्ड'],
     specs: [
       { kicker: 'कागदाचे प्रकार', title: 'कागद व बोर्ड', items: ['७०–४५० जीएसएम क्राफ्ट', 'ब्लीच्ड क्राफ्ट', 'एसबीएस बोर्ड', 'कोरुगेटेड ई-फ्लूट', 'रिजिड ग्रेबोर्ड १२०० जीएसएम'] },
       { kicker: 'छपाई', title: 'छपाई व फिनिशिंग', items: ['बहुरंगी फ्लेक्सो', 'एचडी ऑफसेट', 'फॉइल स्टँपिंग', 'स्पॉट-यूव्ही व मॅट लॅमिनेशन', 'अचूक डाय-कटिंग'] },
@@ -444,6 +448,7 @@ window.SEM_I18N = (function () {
       heroBrowse: 'उत्पाद देखें',
       heroWhatsApp: 'व्हाट्सऐप करें',
       heroCaption: 'हर ऑर्डर एक सपाट शीट से शुरू होता है — आपके नाप पर मोड़कर तैयार.',
+      envReplay: 'लिफाफा फिर से खोलें',
       sealTop: 'ताज़ा',
       sealBottom: 'बनाया',
 
@@ -597,6 +602,7 @@ window.SEM_I18N = (function () {
     finishes: ['गोल्ड फॉइल स्टैंप', 'स्पॉट-यूवी ग्लॉस', 'मैट लैमिनेशन', 'सादा डिबॉस', 'फिनिश नहीं'],
     handles: ['लागू नहीं', 'बटा हुआ कागज़ी हैंडल', 'सपाट कागज़ी हैंडल', 'कॉटन टेप हैंडल', 'डाई-कट हाथ-छेद', 'मैग्नेटिक ढक्कन', 'पील-एंड-सील फ्लैप'],
     prints: ['एक रंग का लोगो', 'दो-रंगी ऑफसेट', 'पूर्ण रंगीन सीएमवायके', 'सिर्फ़ फॉइल, छपाई नहीं', 'बिना छपाई / सादा'],
+    ticker: ['डाई-कटिंग', 'फॉइल स्टैंपिंग', 'स्पॉट-यूवी', 'ऑफसेट छपाई', 'फ्लेक्सो छपाई', 'एम्बॉसिंग व डिबॉसिंग', 'मैट लैमिनेशन', 'विंडो पैचिंग', 'रिजिड बॉक्स निर्माण', 'फूड-ग्रेड बोर्ड'],
     specs: [
       { kicker: 'कागज़ के प्रकार', title: 'कागज़ व बोर्ड', items: ['७०–४५० जीएसएम क्राफ्ट', 'ब्लीच्ड क्राफ्ट', 'एसबीएस बोर्ड', 'कोरुगेटेड ई-फ्लूट', 'रिजिड ग्रेबोर्ड १२०० जीएसएम'] },
       { kicker: 'छपाई', title: 'छपाई व फिनिशिंग', items: ['बहुरंगी फ्लेक्सो', 'एचडी ऑफसेट', 'फॉइल स्टैंपिंग', 'स्पॉट-यूवी व मैट लैमिनेशन', 'सटीक डाई-कटिंग'] },

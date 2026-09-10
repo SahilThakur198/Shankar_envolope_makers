@@ -71,10 +71,10 @@
           <div class="hero-grid">
 
             <div class="hero-copy">
-              <div class="eyebrow">{{ t.heroEyebrow }}</div>
-              <h1 class="hero-title">{{ t.heroTitle }}</h1>
-              <p class="hero-lead">{{ t.heroLead }}</p>
-              <div class="hero-actions">
+              <div class="eyebrow hero-in" style="--i:0;">{{ t.heroEyebrow }}</div>
+              <h1 class="hero-title hero-in hero-in--title" style="--i:1;">{{ t.heroTitle }}</h1>
+              <p class="hero-lead hero-in" style="--i:2;">{{ t.heroLead }}</p>
+              <div class="hero-actions hero-in" style="--i:3;">
                 <button type="button" class="btn btn--primary" onClick="{{ goCatalog }}">
                   {{ t.heroBrowse }}
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
@@ -83,34 +83,55 @@
               </div>
             </div>
 
-            <!-- The closed envelope: drawn in SVG so it stays sharp at every
-                 size, carries the paper texture and lights the page instantly. -->
-            <div class="hero-art">
-              <div class="envelope-stage">
-                <svg class="envelope-svg" viewBox="40 62 520 364" role="img" aria-label="A closed, foil-sealed paper envelope">
+            <!-- The opening graphic. A closed, foil-sealed envelope holds still
+                 for a beat, then the seal lifts, the flap folds back and a
+                 letter slides out. It is built in layers so it can physically
+                 open: inside → letter → front pocket → flap → seal. Tap it to
+                 play the sequence again. -->
+            <div class="hero-art {{ envClass }}" onPointerMove="{{ onHeroMove }}" onPointerLeave="{{ onHeroLeave }}">
+              <button type="button" class="envelope-stage" onClick="{{ replayEnvelope }}" aria-label="{{ t.envReplay }}">
+                <span class="env-tilt">
+                <svg class="envelope-svg" viewBox="40 62 520 364" role="img" aria-hidden="true" focusable="false">
                   <defs>
-                    <linearGradient id="envPaper" x1="0.18" y1="0" x2="0.78" y2="1">
-                      <stop offset="0" stop-color="#fdfaf4"/>
-                      <stop offset="0.46" stop-color="#f4eee1"/>
-                      <stop offset="1" stop-color="#e2d8c4"/>
-                    </linearGradient>
                     <linearGradient id="envFlap" x1="0.3" y1="0" x2="0.7" y2="1">
                       <stop offset="0" stop-color="#fefcf7"/>
                       <stop offset="0.55" stop-color="#f2ebdd"/>
                       <stop offset="1" stop-color="#dccfb7"/>
                     </linearGradient>
-                    <linearGradient id="envFoldL" x1="0" y1="0" x2="1" y2="0.4">
-                      <stop offset="0" stop-color="#e8dfcd"/>
-                      <stop offset="1" stop-color="#f7f2e7"/>
+                    <linearGradient id="envFlapIn" x1="0.5" y1="0" x2="0.5" y2="1">
+                      <stop offset="0" stop-color="#d9cdb6"/>
+                      <stop offset="1" stop-color="#f3ede1"/>
                     </linearGradient>
-                    <linearGradient id="envFoldR" x1="1" y1="0" x2="0" y2="0.4">
-                      <stop offset="0" stop-color="#e5dbc7"/>
-                      <stop offset="1" stop-color="#f5efe3"/>
+                    <linearGradient id="envInside" x1="0.5" y1="0" x2="0.5" y2="1">
+                      <stop offset="0" stop-color="#cfc2a8"/>
+                      <stop offset="0.5" stop-color="#e0d6c3"/>
+                      <stop offset="1" stop-color="#e9e1d1"/>
+                    </linearGradient>
+                    <linearGradient id="envFoldL" x1="0" y1="0" x2="1" y2="0.35">
+                      <stop offset="0" stop-color="#ebe2d1"/>
+                      <stop offset="1" stop-color="#f8f3ea"/>
+                    </linearGradient>
+                    <linearGradient id="envFoldR" x1="1" y1="0" x2="0" y2="0.35">
+                      <stop offset="0" stop-color="#e7ddca"/>
+                      <stop offset="1" stop-color="#f6f0e5"/>
+                    </linearGradient>
+                    <linearGradient id="envFoldB" x1="0.5" y1="0" x2="0.5" y2="1">
+                      <stop offset="0" stop-color="#f7f2e8"/>
+                      <stop offset="1" stop-color="#e4d9c4"/>
+                    </linearGradient>
+                    <linearGradient id="letterPaper" x1="0.2" y1="0" x2="0.8" y2="1">
+                      <stop offset="0" stop-color="#fffefb"/>
+                      <stop offset="1" stop-color="#f4efe5"/>
+                    </linearGradient>
+                    <linearGradient id="foil" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0" stop-color="#ecd092"/>
+                      <stop offset="0.5" stop-color="#c3923f"/>
+                      <stop offset="1" stop-color="#8d6220"/>
                     </linearGradient>
                     <radialGradient id="envKey" cx="0.3" cy="0.14" r="0.85">
-                      <stop offset="0" stop-color="#ffffff" stop-opacity="0.75"/>
-                      <stop offset="0.55" stop-color="#ffffff" stop-opacity="0.12"/>
-                      <stop offset="1" stop-color="#7a6a4c" stop-opacity="0.18"/>
+                      <stop offset="0" stop-color="#ffffff" stop-opacity="0.7"/>
+                      <stop offset="0.55" stop-color="#ffffff" stop-opacity="0.1"/>
+                      <stop offset="1" stop-color="#7a6a4c" stop-opacity="0.2"/>
                     </radialGradient>
                     <radialGradient id="envGround" cx="0.5" cy="0.5" r="0.5">
                       <stop offset="0" stop-color="#4a4034" stop-opacity="0.30"/>
@@ -124,12 +145,12 @@
                     </radialGradient>
                     <linearGradient id="envSheenGrad" x1="0" y1="0" x2="1" y2="0">
                       <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
-                      <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.85"/>
+                      <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.5"/>
                       <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
                     </linearGradient>
 
-                    <filter id="envGrain" x="-6%" y="-6%" width="112%" height="112%">
-                      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" seed="7" result="noise"/>
+                    <filter id="envGrain" x="-4%" y="-4%" width="108%" height="108%">
+                      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" seed="7" result="noise"/>
                       <feColorMatrix in="noise" type="saturate" values="0" result="mono"/>
                       <feComponentTransfer in="mono" result="grain">
                         <feFuncA type="linear" slope="0.10" intercept="0"/>
@@ -143,65 +164,118 @@
                     <filter id="sealSoft" x="-40%" y="-40%" width="180%" height="180%">
                       <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#4a3517" flood-opacity="0.4"/>
                     </filter>
+                    <filter id="letterLift" x="-10%" y="-10%" width="120%" height="125%">
+                      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#4a3a22" flood-opacity="0.18"/>
+                    </filter>
 
                     <clipPath id="envClip">
                       <rect x="96" y="104" width="408" height="252" rx="7"/>
                     </clipPath>
+                    <!-- The front pocket: the whole face except the top "V" the flap covers. -->
+                    <clipPath id="pocketClip">
+                      <path d="M96 104 L300 262 L504 104 L504 356 L96 356 Z"/>
+                    </clipPath>
                   </defs>
 
-                  <!-- Ground shadow -->
-                  <ellipse cx="300" cy="384" rx="212" ry="30" fill="url(#envGround)"/>
-                  <ellipse cx="300" cy="371" rx="176" ry="15" fill="#4a4034" opacity="0.16" filter="url(#envSoft)"/>
+                  <!-- Ground shadow (shrinks with the envelope as the camera pulls back) -->
+                  <g class="env-ground">
+                    <ellipse cx="300" cy="384" rx="212" ry="30" fill="url(#envGround)"/>
+                    <ellipse cx="300" cy="371" rx="176" ry="15" fill="#4a4034" opacity="0.16" filter="url(#envSoft)"/>
+                  </g>
 
-                  <!-- Envelope body -->
-                  <g filter="url(#envGrain)">
-                    <rect x="96" y="104" width="408" height="252" rx="7" fill="url(#envPaper)"/>
+                  <g class="env-rig">
+                    <!-- Invisible frame that keeps the rig's pivot fixed while its
+                         children move (fill-box would otherwise drift). -->
+                    <rect x="80" y="-60" width="440" height="480" fill="none" stroke="none"/>
 
-                    <!-- Back side folds, read as faint creases through the paper -->
-                    <g clip-path="url(#envClip)" opacity="0.55">
-                      <path d="M96 104 L300 262 L96 356 Z" fill="url(#envFoldL)"/>
-                      <path d="M504 104 L300 262 L504 356 Z" fill="url(#envFoldR)"/>
-                      <path d="M96 356 L300 262 L504 356 Z" fill="#efe7d7"/>
+                    <!-- Open flap, folded back behind the envelope (hidden until it swings up) -->
+                    <g class="env-flap-open">
+                      <g transform="translate(0 208) scale(1 -1)">
+                        <path d="M96 111 A7 7 0 0 1 103 104 L497 104 A7 7 0 0 1 504 111 L308 258 A13 13 0 0 1 292 258 Z" fill="url(#envFlapIn)"/>
+                        <path d="M96 111 A7 7 0 0 1 103 104 L497 104 A7 7 0 0 1 504 111 L308 258 A13 13 0 0 1 292 258 Z"
+                              fill="none" stroke="#bfb193" stroke-opacity="0.55" stroke-width="1.1"/>
+                      </g>
                     </g>
 
-                    <!-- The closed top flap -->
-                    <path d="M96 111 A7 7 0 0 1 103 104 L497 104 A7 7 0 0 1 504 111 L308 258 A13 13 0 0 1 292 258 Z" fill="url(#envFlap)"/>
-                    <path d="M96 111 A7 7 0 0 1 103 104 L497 104 A7 7 0 0 1 504 111 L308 258 A13 13 0 0 1 292 258 Z"
-                          fill="none" stroke="#c3b596" stroke-opacity="0.6" stroke-width="1.1"/>
+                    <!-- Inside of the envelope -->
+                    <rect x="96" y="104" width="408" height="252" rx="7" fill="url(#envInside)"/>
 
-                    <!-- Crease highlight along the flap edge -->
-                    <path d="M104 108 L300 255 L496 108" fill="none" stroke="#ffffff" stroke-opacity="0.5" stroke-width="1.6" stroke-linecap="round"/>
+                    <!-- The letter -->
+                    <g class="env-letter">
+                      <g filter="url(#letterLift)">
+                        <rect x="118" y="120" width="364" height="222" rx="3" fill="url(#letterPaper)" stroke="#d8cdb6" stroke-width="1"/>
+                        <circle cx="300" cy="166" r="21" fill="none" stroke="url(#foil)" stroke-width="1.6"/>
+                        <text x="300" y="167" text-anchor="middle" dominant-baseline="central"
+                              font-family="Cormorant Garamond, Georgia, serif" font-size="25" fill="url(#foil)">S</text>
+                        <text x="300" y="212" text-anchor="middle"
+                              font-family="Cormorant Garamond, Georgia, serif" font-size="30" fill="#2d2b2b">Shankar</text>
+                        <text x="300" y="233" text-anchor="middle" letter-spacing="3.6"
+                              font-family="Lora, Georgia, serif" font-size="9" fill="#8a7a5c">ENVELOPE MAKERS</text>
+                        <path d="M264 250 L336 250" stroke="url(#foil)" stroke-width="1.3" stroke-linecap="round"/>
+                        <path d="M172 272 L428 272 M188 286 L412 286 M208 300 L392 300" stroke="#dcd3c1" stroke-width="3" stroke-linecap="round"/>
+                      </g>
+                    </g>
 
-                    <!-- Body outline -->
-                    <rect x="96" y="104" width="408" height="252" rx="7" fill="none" stroke="#bfb193" stroke-opacity="0.75" stroke-width="1.2"/>
+                    <!-- Front pocket: the three folded panels -->
+                    <g class="env-pocket" filter="url(#envGrain)">
+                      <g clip-path="url(#envClip)">
+                        <path d="M96 104 L300 262 L96 356 Z" fill="url(#envFoldL)"/>
+                        <path d="M504 104 L300 262 L504 356 Z" fill="url(#envFoldR)"/>
+                        <path d="M96 356 L300 250 L504 356 Z" fill="url(#envFoldB)"/>
+                        <path d="M96 356 L300 250 L504 356" fill="none" stroke="#c7b99b" stroke-opacity="0.55" stroke-width="1.1"/>
+                        <path d="M102 352 L300 256 L498 352" fill="none" stroke="#ffffff" stroke-opacity="0.55" stroke-width="1.2"/>
+                        <path d="M96 104 L300 262 L504 104" fill="none" stroke="#c7b99b" stroke-opacity="0.45" stroke-width="1"/>
+                      </g>
+                      <rect x="96" y="104" width="408" height="252" rx="7" fill="url(#envKey)" clip-path="url(#pocketClip)" style="mix-blend-mode:soft-light"/>
+                      <path d="M96 104 L300 262 L504 104 L504 349 A7 7 0 0 1 497 356 L103 356 A7 7 0 0 1 96 349 Z"
+                            fill="none" stroke="#bfb193" stroke-opacity="0.75" stroke-width="1.2"/>
+                    </g>
 
-                    <!-- Cinematic key light + falloff -->
-                    <rect x="96" y="104" width="408" height="252" rx="7" fill="url(#envKey)" style="mix-blend-mode:soft-light"/>
-                  </g>
+                    <!-- Closed flap (on top until it folds back) -->
+                    <g class="env-flap-closed">
+                      <g filter="url(#envGrain)">
+                        <path d="M96 111 A7 7 0 0 1 103 104 L497 104 A7 7 0 0 1 504 111 L308 258 A13 13 0 0 1 292 258 Z" fill="url(#envFlap)"/>
+                        <path d="M96 111 A7 7 0 0 1 103 104 L497 104 A7 7 0 0 1 504 111 L308 258 A13 13 0 0 1 292 258 Z" fill="url(#envKey)" style="mix-blend-mode:soft-light"/>
+                        <path d="M96 111 A7 7 0 0 1 103 104 L497 104 A7 7 0 0 1 504 111 L308 258 A13 13 0 0 1 292 258 Z"
+                              fill="none" stroke="#c3b596" stroke-opacity="0.6" stroke-width="1.1"/>
+                        <path d="M104 108 L300 255 L496 108" fill="none" stroke="#ffffff" stroke-opacity="0.5" stroke-width="1.6" stroke-linecap="round"/>
+                      </g>
+                      <!-- darkens as the flap turns away from the light -->
+                      <path class="env-flap-shade" d="M96 111 A7 7 0 0 1 103 104 L497 104 A7 7 0 0 1 504 111 L308 258 A13 13 0 0 1 292 258 Z" fill="#5b4a2c" opacity="0"/>
+                    </g>
 
-                  <!-- Travelling sheen -->
-                  <g clip-path="url(#envClip)">
-                    <rect class="env-sheen" x="-140" y="80" width="120" height="300" fill="url(#envSheenGrad)" transform="skewX(-18)">
-                      <animate attributeName="x" from="-160" to="640" dur="5.5s" begin="1.2s" repeatCount="indefinite"/>
-                    </rect>
-                  </g>
+                    <!-- Travelling sheen -->
+                    <g clip-path="url(#envClip)">
+                      <rect class="env-sheen" x="0" y="60" width="110" height="340" fill="url(#envSheenGrad)"/>
+                    </g>
 
-                  <!-- Wax seal -->
-                  <g class="env-seal" filter="url(#sealSoft)">
-                    <circle cx="300" cy="256" r="35" fill="url(#sealFace)"/>
-                    <circle cx="300" cy="256" r="35" fill="none" stroke="#7d5411" stroke-opacity="0.55" stroke-width="1.4"/>
-                    <circle cx="300" cy="256" r="27" fill="none" stroke="#5a3b0a" stroke-opacity="0.35" stroke-width="1"/>
-                    <text x="300" y="256" text-anchor="middle" dominant-baseline="central"
-                          font-family="Cormorant Garamond, Georgia, serif" font-size="30" fill="#4b3208" fill-opacity="0.88">S</text>
-                    <path d="M276 236 a34 34 0 0 1 26 -10" fill="none" stroke="#ffffff" stroke-opacity="0.45" stroke-width="2.4" stroke-linecap="round"/>
+                    <!-- Wax seal -->
+                    <g class="env-seal" filter="url(#sealSoft)">
+                      <circle cx="300" cy="256" r="35" fill="url(#sealFace)"/>
+                      <circle cx="300" cy="256" r="35" fill="none" stroke="#7d5411" stroke-opacity="0.55" stroke-width="1.4"/>
+                      <circle cx="300" cy="256" r="27" fill="none" stroke="#5a3b0a" stroke-opacity="0.35" stroke-width="1"/>
+                      <text x="300" y="256" text-anchor="middle" dominant-baseline="central"
+                            font-family="Cormorant Garamond, Georgia, serif" font-size="30" fill="#4b3208" fill-opacity="0.88">S</text>
+                      <path d="M276 236 a34 34 0 0 1 26 -10" fill="none" stroke="#ffffff" stroke-opacity="0.45" stroke-width="2.4" stroke-linecap="round"/>
+                    </g>
                   </g>
                 </svg>
-              </div>
+                </span>
+              </button>
               <div class="hero-caption">{{ t.heroCaption }}</div>
             </div>
 
           </div>
         </section>
+
+        <!-- ── Capabilities ticker (decorative; the same list lives on the Craft page) ── -->
+        <div class="ticker" aria-hidden="true">
+          <div class="ticker-track">
+            <sc-for list="{{ tickerItems }}" as="k" hint-placeholder-count="20">
+              <span class="ticker-item"><span class="ticker-mark"></span>{{ k }}</span>
+            </sc-for>
+          </div>
+        </div>
 
         <!-- ── Trust strip ── -->
         <section class="wrap section--tight">
@@ -223,7 +297,7 @@
           </div>
           <div class="qcats">
             <sc-for list="{{ quickCats }}" as="q" hint-placeholder-count="5">
-              <button type="button" class="qcat" onClick="{{ q.onSelect }}">
+              <button type="button" class="qcat" style="--i:{{ q.i }};" onClick="{{ q.onSelect }}">
                 <span class="qcat-tile"><span data-icon="{{ q.icon }}"></span></span>
                 <span class="qcat-label">{{ q.label }}</span>
               </button>
@@ -239,7 +313,7 @@
           </div>
           <div class="cardgrid">
             <sc-for list="{{ products }}" as="p" hint-placeholder-count="5">
-              <button type="button" class="card" data-reveal style="transition-delay:{{ p.delay }};" onClick="{{ p.onView }}">
+              <button type="button" class="card" data-reveal="fold" style="animation-delay:{{ p.delay }};" onClick="{{ p.onView }}">
                 <span class="card-media">
                   <span class="pimg">
                     <img class="pimg-bg" src="{{ p.img }}" alt="" aria-hidden="true"/>
@@ -263,7 +337,7 @@
           <p class="lead">{{ t.processLead }}</p>
           <div class="steps">
             <sc-for list="{{ steps }}" as="s" hint-placeholder-count="5">
-              <div class="step">
+              <div class="step" style="--i:{{ s.i }};">
                 <div class="step-num">{{ s.n }}</div>
                 <div>
                   <h3 class="step-title">{{ s.title }}</h3>
@@ -384,7 +458,7 @@
 
         <div class="cardgrid cardgrid--list">
           <sc-for list="{{ filtered }}" as="p" hint-placeholder-count="5">
-            <div class="card" data-reveal style="transition-delay:{{ p.delay }};cursor:default;">
+            <div class="card" data-reveal="fold" style="animation-delay:{{ p.delay }};cursor:default;">
               <div class="card-media">
                 <div class="pimg pimg--wide">
                   <img class="pimg-bg" src="{{ p.img }}" alt="" aria-hidden="true"/>
@@ -423,7 +497,7 @@
 
           <!-- Gallery -->
           <div class="detail-media">
-            <div class="plate pimg pimg--wide">
+            <div class="plate pimg pimg--wide imgswap-{{ imgPhase }}">
               <img class="pimg-bg" src="{{ activeImg }}" alt="" aria-hidden="true"/>
               <img class="pimg-fg" src="{{ activeImg }}" alt="{{ product.name }}"/>
             </div>
@@ -475,8 +549,8 @@
               </div>
 
               <div class="preview-row">
-                <div class="preview-swatch" style="background:{{ swatchBg }};box-shadow:{{ swatchSheen }};">
-                  <div class="preview-stamp" style="background:{{ stampBg }};border:{{ stampBorder }};color:{{ stampText }};">LOGO</div>
+                <div class="preview-swatch press-{{ pressPhase }}" style="background:{{ swatchBg }};box-shadow:{{ swatchSheen }};">
+                  <div class="preview-stamp stamp-{{ pressPhase }}" style="background:{{ stampBg }};border:{{ stampBorder }};color:{{ stampText }};">LOGO</div>
                 </div>
                 <div style="flex:1;min-width:0;">
                   <div class="filter-label" style="margin-bottom:3px;">{{ t.selected }}</div>
@@ -591,7 +665,7 @@
         </div>
         <div class="speccards">
           <sc-for list="{{ specs }}" as="s" hint-placeholder-count="4">
-            <div class="speccard" data-reveal style="transition-delay:{{ s.delay }};">
+            <div class="speccard" data-reveal="fold" style="animation-delay:{{ s.delay }};">
               <div class="eyebrow" style="margin-bottom:5px;">{{ s.kicker }}</div>
               <h4>{{ s.title }}</h4>
               <ul class="speclist">
@@ -776,7 +850,7 @@
 
   <!-- ══════════════ TOAST ══════════════ -->
   <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
-    <div class="toast sk-backdrop" role="status">{{ toast }}</div>
+    <div class="toast" role="status">{{ toast }}</div>
   </sc-if>
 
 </div>
@@ -922,9 +996,15 @@ class Component extends DCLogic {
       handle: first.defHandle,
       print: first.defPrint,
       notes: '',
+      // Bumped on every material/finish or photo change so the preview
+      // "press" and the gallery crossfade replay each time (see pressPhase).
+      pressTick: 0,
+      imgTick: 0,
     };
     this._toastT = null;
     this._io = null;
+    this._envLeftHome = false;
+    this._tiltRaf = 0;
   }
 
   // ── lifecycle ────────────────────────────────────────────────────────────
@@ -947,6 +1027,7 @@ class Component extends DCLogic {
       this.applyLangAttrs();
     }
     if (this._lastScreen !== this.state.screen) {
+      if (this._lastScreen === 'home') this._envLeftHome = true;
       this._lastScreen = this.state.screen;
       if (!this._anchorJump) window.scrollTo(0, 0);
       this._anchorJump = false;
@@ -970,7 +1051,7 @@ class Component extends DCLogic {
      screen switches. */
   setupReveal() {
     if (!('IntersectionObserver' in window)) {
-      document.querySelectorAll('[data-reveal]').forEach(function (el) { el.classList.add('sk-in'); });
+      document.querySelectorAll('[data-reveal], .section--ruled').forEach(function (el) { el.classList.add('sk-in'); });
       return;
     }
     if (!this._io) {
@@ -982,7 +1063,7 @@ class Component extends DCLogic {
     }
     const io = this._io;
     requestAnimationFrame(function () {
-      document.querySelectorAll('[data-reveal]:not(.sk-in)').forEach(function (el) { io.observe(el); });
+      document.querySelectorAll('[data-reveal]:not(.sk-in), .section--ruled:not(.sk-in)').forEach(function (el) { io.observe(el); });
     });
   }
 
@@ -1030,6 +1111,50 @@ class Component extends DCLogic {
   };
 
   setLang = (code) => { writeStore('sem.lang', code); this.setState({ lang: code }); };
+
+  // ── motion ───────────────────────────────────────────────────────────────
+  /* Replay the envelope sequence. The classes live on the DOM node only; the
+     template's className for .hero-art doesn't change, so React leaves it be. */
+  replayEnvelope = (e) => {
+    const art = e && e.currentTarget && e.currentTarget.closest('.hero-art');
+    if (!art) return;
+    art.classList.remove('is-playing', 'is-open');
+    void art.offsetWidth;                 // restart CSS animations
+    art.classList.add('is-playing');
+  };
+
+  /* A few degrees of tilt toward the cursor, desktop only. */
+  onHeroMove = (e) => {
+    if (!this._canTilt()) return;
+    const art = e.currentTarget;
+    const r = art.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top) / r.height - 0.5;
+    cancelAnimationFrame(this._tiltRaf);
+    this._tiltRaf = requestAnimationFrame(function () {
+      art.style.setProperty('--tilt-x', (x * 9).toFixed(2) + 'deg');
+      art.style.setProperty('--tilt-y', (-y * 7).toFixed(2) + 'deg');
+      art.style.setProperty('--glint', (50 + x * 60).toFixed(1) + '%');
+    });
+  };
+  onHeroLeave = (e) => {
+    const art = e.currentTarget;
+    cancelAnimationFrame(this._tiltRaf);
+    art.style.setProperty('--tilt-x', '0deg');
+    art.style.setProperty('--tilt-y', '0deg');
+  };
+  _canTilt() {
+    if (this._tiltOk === undefined) {
+      this._tiltOk = !!(window.matchMedia &&
+        window.matchMedia('(hover: hover) and (pointer: fine)').matches &&
+        !window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    }
+    return this._tiltOk;
+  }
+
+  pickMat = (i) => this.setState({ mat: i, pressTick: this.state.pressTick + 1 });
+  pickFin = (i) => this.setState({ fin: i, pressTick: this.state.pressTick + 1 });
+  pickImg = (i) => { if (i !== this.state.gi) this.setState({ gi: i, imgTick: this.state.imgTick + 1 }); };
 
   toggleSave = (id) => {
     const T = this.T();
@@ -1218,9 +1343,9 @@ class Component extends DCLogic {
       { value: '100%', label: T.statRecycle + ' · ' + T.statRecycleSub },
       { value: T.statMoq, label: T.statMoqSub },
     ];
-    const quickCats = QUICK.map(function (q) {
+    const quickCats = QUICK.map(function (q, qi) {
       return {
-        icon: q.icon,
+        icon: q.icon, i: qi,
         label: (q.cat === 'All' ? (L.catsShort || {}).All : null) || (L.cats || {})[q.cat] || q.cat,
         onSelect: function () { self.goCatFiltered(q.cat); },
       };
@@ -1228,7 +1353,7 @@ class Component extends DCLogic {
     const products = PRODUCTS.map(function (p, i) {
       const d = self.decorate(p); d.delay = (i * 55) + 'ms'; return d;
     });
-    const steps = (L.process || []).map(function (st, i) { return { n: i + 1, title: st.title, body: st.body }; });
+    const steps = (L.process || []).map(function (st, i) { return { n: i + 1, i: i, title: st.title, body: st.body }; });
     const faqs = (L.faq || []).map(function (f, i) {
       return {
         q: f.q, a: f.a, isOpen: s.openFaq === i,
@@ -1272,7 +1397,7 @@ class Component extends DCLogic {
     const gi = Math.min(s.gi, Math.max(0, rawProduct.gallery.length - 1));
     const activeImg = rawProduct.gallery[gi];
     const gallery = rawProduct.gallery.map(function (src, i) {
-      return { src: src, cls: self.activeCls(i === gi), label: 'View ' + (i + 1), onSelect: function () { self.setState({ gi: i }); } };
+      return { src: src, cls: self.activeCls(i === gi), label: 'View ' + (i + 1), onSelect: function () { self.pickImg(i); } };
     });
     product.specRows = [
       { label: T.specSizes, value: rawProduct.sizes.join('  ·  ') + '  ·  ' + T.specCustom },
@@ -1289,13 +1414,13 @@ class Component extends DCLogic {
     const materials = (L.materials || []).map(function (m, i) {
       return {
         label: m.label, sub: m.sub, swatch: MAT_SWATCHES[i],
-        cls: self.activeCls(i === s.mat), onSelect: function () { self.setState({ mat: i }); },
+        cls: self.activeCls(i === s.mat), onSelect: function () { self.pickMat(i); },
       };
     });
     const matPills = (L.materials || []).map(function (m, i) {
-      return { label: m.label, cls: self.activeCls(i === s.mat), onSelect: function () { self.setState({ mat: i }); } };
+      return { label: m.label, cls: self.activeCls(i === s.mat), onSelect: function () { self.pickMat(i); } };
     });
-    const finishes = this.pillList(L.finishes || [], s.fin, function (i) { self.setState({ fin: i }); });
+    const finishes = this.pillList(L.finishes || [], s.fin, function (i) { self.pickFin(i); });
     const handleOpts = this.pillList(L.handles || [], s.handle, function (i) { self.setState({ handle: i }); });
     const printOpts = this.pillList(L.prints || [], s.print, function (i) { self.setState({ print: i }); });
     const qtyOpts = QTYS.map(function (q) {
@@ -1344,11 +1469,15 @@ class Component extends DCLogic {
       goCraft: function () { self.go('craft'); },
       onBack: this.back,
 
-      paperStyle: 'background-image:url(' + (IMG.paperTexture || '') + ')',
+      paperStyle: { backgroundImage: 'url("' + (IMG.paperTexture || '') + '")' },
       bandImg: IMG.band,
       craftImg: (IMG.cakekraft || [])[2] || (IMG.cakekraft || [])[0],
 
       stats: stats, quickCats: quickCats, products: products,
+      tickerItems: (L.ticker || []).concat(L.ticker || []),
+      envClass: this._envLeftHome ? 'is-open' : 'is-playing',
+      replayEnvelope: this.replayEnvelope, onHeroMove: this.onHeroMove, onHeroLeave: this.onHeroLeave,
+      pressPhase: s.pressTick % 2, imgPhase: s.imgTick % 2,
       steps: steps, faqs: faqs, contacts: contacts,
       specs: (L.specs || []).map(function (sp, i) { return Object.assign({}, sp, { delay: (i * 70) + 'ms' }); }),
 
