@@ -1,0 +1,8 @@
+# OS and sync clutter
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Claude Code local state
+.claude/worktrees/
+.claude/settings.local.json
